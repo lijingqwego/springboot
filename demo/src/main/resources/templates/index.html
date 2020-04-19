@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>Hello World!</h2>
+    <table>
+        <tr>
+            <th>编号</th>
+        </tr>
+        <tr th:each="num : ${list}">
+            <td th:text="${num}"></td>
+        </tr>
+    </table>
+    <input type="tel" th:value="${mobile}">
+    <h2 th:text="${name}"></h2>
+</body>
+</html>
