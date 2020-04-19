@@ -5,6 +5,15 @@ public class User {
     private String userName;
     private Integer userAge;
     private String password;
+    private int roleId;
+
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
 
     public void setUserId(int userId) {
         this.userId = userId;

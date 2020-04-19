@@ -43,7 +43,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User selectUserByName(String userName, String password) {
-        return userMapper.selectUserByName(userName,SymmetricEncoder.AESEncode(password));
+    public User selectUserByNameAndPwd(String userName, String password) {
+        return userMapper.selectUserByNameAndPwd(userName,SymmetricEncoder.AESEncode(password));
+    }
+
+    @Override
+    public User selectUserByName(String principal) {
+        return userMapper.selectUserByName(principal);
     }
 }

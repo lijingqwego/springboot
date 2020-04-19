@@ -4,6 +4,8 @@ import com.example.demo.pojo.User;
 import com.example.demo.service.IUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +23,19 @@ public class HelloController {
         return "hello"+a;
     }
 
+    @RequiresRoles(value = {"ordinary"})
     @GetMapping("/getUser")
     public User getUser(Integer userId){
         return iUserService.selectUserById(userId);
     }
 
+    @RequiresRoles(value = {"admin"})
     @GetMapping("/deleteUser")
     public int deleteUser(Integer userId){
         return iUserService.deleteUser(userId);
     }
 
+    @RequiresRoles(value = {"system"})
     @PostMapping("/updateUser")
     public int updateUser(@RequestParam("userName") String userName, @RequestParam("password")String password, @RequestParam("userId")Integer userId){
         return iUserService.updateUser(userName,password,userId);

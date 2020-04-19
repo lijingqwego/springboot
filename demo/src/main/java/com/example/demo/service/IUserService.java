@@ -14,5 +14,7 @@ public interface IUserService {
 
     void transfor(String userName, Integer userId);
 
-    User selectUserByName(String parseInt,String password);
+    User selectUserByNameAndPwd(String parseInt, String password);
+
+    User selectUserByName(String principal);
 }

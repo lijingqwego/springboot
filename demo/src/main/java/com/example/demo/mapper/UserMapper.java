@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface UserMapper {
 
-    @Select("SELECT `user_id` AS userId,`user_name` AS userName,`user_age` AS userAge FROM t_user_info WHERE user_id = #{userId};")
+    @Select("SELECT `user_id` AS userId,`user_name` AS userName,`password`,`user_age` AS userAge FROM t_user_info WHERE user_id = #{userId};")
     User selectUserById(@Param("userId") int userId);
 
     @Insert("INSERT INTO t_user_info (`user_name`, `password`, `user_age`) VALUES (#{userName}, #{password}, #{userAge});")
@@ -19,5 +19,8 @@ public interface UserMapper {
     int deleteUser(@Param("userId") Integer userId);
 
     @Select("SELECT `user_id` AS userId,`user_name` AS userName,`password`,`user_age` AS userAge FROM t_user_info WHERE user_name = #{userName} AND password = #{password};")
-    User selectUserByName(@Param("userName")String userName, @Param("password")String password);
+    User selectUserByNameAndPwd(@Param("userName")String userName, @Param("password")String password);
+
+    @Select("SELECT `user_id` AS userId,`user_name` AS userName,`role_id` as roleId FROM t_user_info WHERE user_name = #{userName};")
+    User selectUserByName(@Param("userName")String userName);
 }
