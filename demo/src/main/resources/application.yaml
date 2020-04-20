@@ -1,0 +1,18 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /springboot
+spring:
+  datasource:
+    username: root
+    password: asd3135
+    url: jdbc:mysql://localhost:3306/emp?characterEncoding=utf-8
+    driver-class-name: com.mysql.jdbc.Driver
+  thymeleaf:
+    cache: false
+    mode: HTML5
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+  servlet:
+    context-type: text/heml
