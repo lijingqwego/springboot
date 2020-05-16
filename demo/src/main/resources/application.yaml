@@ -15,4 +15,4 @@ spring:
     suffix: .html
     encoding: UTF-8
   servlet:
-    context-type: text/heml
+    context-type: text/html
