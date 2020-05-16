@@ -70,10 +70,10 @@ public class HbaseUtils {
     public static void insertData(String tableName, String rowKey,String cf, Map<String,String> map) {
         try {
             TableName tablename = TableName.valueOf(tableName);
-            Put put = new Put(rowKey.getBytes());
+            Put put = new Put(Bytes.toBytes(rowKey));
             //参数：1.列族名  2.列名  3.值
             for (Map.Entry<String,String> entry : map.entrySet()) {
-                put.addColumn(cf.getBytes(), entry.getKey().getBytes(), entry.getValue().getBytes()) ;
+                put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue())) ;
             }
             Table table = initHbase().getTable(tablename);
             table.put(put);
@@ -93,7 +93,7 @@ public class HbaseUtils {
         Map<String,String> map = new HashMap<String,String>();
         try {
             Table table = initHbase().getTable(TableName.valueOf(tableName));
-            Get get = new Get(rowKey.getBytes());
+            Get get = new Get(Bytes.toBytes(rowKey));
             //先判断是否有此条数据
             if(!get.isCheckExistenceOnly()){
                 Result result = table.get(get);
@@ -150,6 +150,34 @@ public class HbaseUtils {
                 for(Cell cell : result.rawCells()){
                     String row = Bytes.toString(cell.getRowArray(), cell.getRowOffset(), cell.getRowLength());
                     //String family =  Bytes.toString(cell.getFamilyArray(),cell.getFamilyOffset(),cell.getFamilyLength());
+                    String colName = Bytes.toString(cell.getQualifierArray(),cell.getQualifierOffset(),cell.getQualifierLength());
+                    String value = Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength());
+                    map.put(colName,value);
+                }
+                list.add(map);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 查询指定rowKey范围数据
+     * @param tableName
+     * @return
+     */
+    public static List<Map<String,String>> getRange(String tableName,String startRowKey,String endRowKey){
+        List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+        try {
+            Table table = initHbase().getTable(TableName.valueOf(tableName));
+            Scan scan = new Scan();
+            scan.setStartRow(Bytes.toBytes(startRowKey));
+            scan.setStopRow(Bytes.toBytes(endRowKey));
+            ResultScanner results = table.getScanner(scan);
+            for (Result res : results) {
+                Map<String,String> map = new HashMap<String,String>();
+                for(Cell cell : res.rawCells()){
                     String colName = Bytes.toString(cell.getQualifierArray(),cell.getQualifierOffset(),cell.getQualifierLength());
                     String value = Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength());
                     map.put(colName,value);
