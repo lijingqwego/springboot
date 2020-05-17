@@ -3,6 +3,7 @@ package com.example.demo.utils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
@@ -162,18 +163,22 @@ public class HbaseUtils {
         return list;
     }
 
+
     /**
      * 查询指定rowKey范围数据
      * @param tableName
      * @return
      */
-    public static List<Map<String,String>> getRange(String tableName,String startRowKey,String endRowKey){
+    public static List<Map<String,String>> getRange(String tableName, String startRowKey, String endRowKey, Filter filter){
         List<Map<String,String>> list = new ArrayList<Map<String,String>>();
         try {
             Table table = initHbase().getTable(TableName.valueOf(tableName));
             Scan scan = new Scan();
             scan.setStartRow(Bytes.toBytes(startRowKey));
             scan.setStopRow(Bytes.toBytes(endRowKey));
+            if(filter != null){
+                scan.setFilter(filter);
+            }
             ResultScanner results = table.getScanner(scan);
             for (Result res : results) {
                 Map<String,String> map = new HashMap<String,String>();
