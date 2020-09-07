@@ -2,6 +2,7 @@ package com.example.demo.utils;
 
 import com.example.demo.encry.SymmetricEncoder;
 import com.example.demo.pojo.User;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
@@ -24,7 +25,17 @@ public class Test {
     private static final String table = "t_location_interface_cfg";
     private static final String[] cols = {"cf1"};
 
+    enum Color{
+        BLUE,RED,GREEN
+    }
     public static void main(String[] args) throws IOException, JSONException {
+        String[] arr = {};
+        boolean empty = ArrayUtils.isEmpty(arr);
+        System.out.println(empty);
+        Color bule = Color.BLUE;
+        System.out.println(bule.name());
+
+
 //        Map<String,String> map = new HashMap<String,String>();
 //        for (int i = 0; i < 10; i++) {
 //            map.put("userId","000001"+i);
