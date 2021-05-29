@@ -7,6 +7,15 @@ public class User {
     private String password;
     private int roleId;
 
+    public User() {
+
+    }
+
+    public User(String userName, Integer userAge) {
+        this.userName = userName;
+        this.userAge = userAge;
+    }
+
     public int getRoleId() {
         return roleId;
     }

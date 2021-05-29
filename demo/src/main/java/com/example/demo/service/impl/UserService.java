@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class UserService implements IUserService {
 
@@ -50,5 +52,10 @@ public class UserService implements IUserService {
     @Override
     public User selectUserByName(String principal) {
         return userMapper.selectUserByName(principal);
+    }
+
+    @Override
+    public List<String> selectUserNameByMaxAgeTop(int topN) {
+        return userMapper.selectUserNameByMaxAgeTop(topN);
     }
 }

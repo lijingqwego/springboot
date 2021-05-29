@@ -3,6 +3,8 @@ package com.example.demo.mapper;
 import com.example.demo.pojo.User;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
 
@@ -23,4 +25,7 @@ public interface UserMapper {
 
     @Select("SELECT `user_id` AS userId,`user_name` AS userName,`role_id` as roleId FROM t_user_info WHERE user_name = #{userName};")
     User selectUserByName(@Param("userName")String userName);
+
+    @Select("SELECT `user_name` AS userName FROM t_user_info GROUP BY user_name order by user_age desc LIMIT #{topN}")
+    List<String> selectUserNameByMaxAgeTop(@Param("topN")int topN);
 }

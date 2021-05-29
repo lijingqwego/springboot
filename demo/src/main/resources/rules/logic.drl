@@ -1,0 +1,256 @@
+package rules.refuse
+import com.example.demo.pojo.Refuse
+
+global java.util.List ageAlis
+
+rule "baseMessage1"
+ no-loop true
+ lock-on-active true
+ salience 1
+ when
+    $re:Refuse(age>0 && age<1)
+ then
+    ageAlis.add("襁褓");
+end
+
+
+rule "baseMessage2"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age>=2 && age<=3)
+	then
+		ageAlis.add("孩提");
+end
+
+rule "baseMessage3"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==7 && sex=='女')
+	then
+		ageAlis.add("髫年");
+end
+
+rule "baseMessage4"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==8 && sex=='男')
+	then
+		ageAlis.add("龆年");
+end
+
+rule "baseMessage5"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age>1 && age<8)
+	then
+		ageAlis.add("总角");
+end
+
+rule "baseMessage6"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age>1 && age<=10)
+	then
+		ageAlis.add("黄口");
+end
+
+rule "baseMessage7"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age>=13 && age<=15)
+	then
+		ageAlis.add("舞勺之年");
+end
+
+rule "baseMessage8"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age>=15 && age<=20)
+	then
+		ageAlis.add("舞象之年");
+end
+
+rule "baseMessage9"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==12 && sex=='女')
+	then
+		ageAlis.add("金钗之年");
+end
+
+rule "baseMessage10"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==13 && sex=='女')
+	then
+		ageAlis.add("豆蔻年华");
+end
+
+rule "baseMessage11"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==15 && sex=='女')
+	then
+		ageAlis.add("及笄之年");
+end
+
+rule "baseMessage12"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==16 && sex=='女')
+	then
+		ageAlis.add("破瓜年华、碧玉年华");
+end
+
+rule "baseMessage13"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==20 && sex=='女')
+	then
+		ageAlis.add("桃李年华");
+end
+
+rule "baseMessage14"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==24 && sex=='女')
+	then
+		ageAlis.add("花信年华");
+end
+
+rule "baseMessage15"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==30 && sex=='女')
+	then
+		ageAlis.add("半老徐娘");
+end
+
+rule "baseMessage16"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==20 && sex=='男')
+	then
+		ageAlis.add("弱冠");
+end
+
+rule "baseMessage17"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==30 && sex=='男')
+	then
+		ageAlis.add("而立之年");
+end
+
+rule "baseMessage18"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==40 && sex=='男')
+	then
+		ageAlis.add("不惑之年");
+end
+
+rule "baseMessage19"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==50)
+	then
+		ageAlis.add("知命之年");
+end
+
+rule "baseMessage20"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==60)
+	then
+		ageAlis.add("花甲");
+end
+
+rule "baseMessage21"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==70)
+	then
+		ageAlis.add("古稀");
+end
+
+rule "baseMessage22"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==80)
+	then
+		ageAlis.add("杖朝之年");
+end
+
+rule "baseMessage23"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age>=80 && age<=90)
+	then
+		ageAlis.add("杖朝之年");
+end
+
+rule "baseMessage24"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==90)
+	then
+		ageAlis.add("鲐背之年");
+end
+
+rule "baseMessage25"
+	no-loop true
+	lock-on-active true
+	salience 1
+	when
+		$re:Refuse(age==100)
+	then
+		ageAlis.add("期颐");
+end
+

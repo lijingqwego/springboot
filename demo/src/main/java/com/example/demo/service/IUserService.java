@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.pojo.User;
 
+import java.util.List;
+
 public interface IUserService {
 
     User selectUserById(int userId);
@@ -17,4 +19,6 @@ public interface IUserService {
     User selectUserByNameAndPwd(String parseInt, String password);
 
     User selectUserByName(String principal);
+
+    List<String> selectUserNameByMaxAgeTop(int topN);
 }

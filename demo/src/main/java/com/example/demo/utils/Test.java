@@ -1,17 +1,9 @@
 package com.example.demo.utils;
 
-import com.example.demo.encry.SymmetricEncoder;
+
+
 import com.example.demo.pojo.User;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.filter.CompareFilter;
-import org.apache.hadoop.hbase.filter.Filter;
-import org.apache.hadoop.hbase.filter.FilterList;
-import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
-import org.apache.hadoop.hbase.util.Bytes;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import com.sun.istack.Pool;
 import org.mortbay.util.ajax.JSON;
 
 import java.io.BufferedReader;
@@ -19,8 +11,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Test {
+
+    public static void main(String[] args) {
+        
+    }
 
     private static final String table = "t_location_interface_cfg";
     private static final String[] cols = {"cf1"};
@@ -28,12 +25,74 @@ public class Test {
     enum Color{
         BLUE,RED,GREEN
     }
-    public static void main(String[] args) throws IOException, JSONException {
-        String[] arr = {};
-        boolean empty = ArrayUtils.isEmpty(arr);
-        System.out.println(empty);
-        Color bule = Color.BLUE;
-        System.out.println(bule.name());
+    public static void main2(String[] args) throws IOException {
+
+        List<User> userList = new ArrayList<User>();
+        userList.add(new User("B",56));
+        userList.add(new User("B",12));
+        userList.add(new User("A",35));
+        userList.add(new User("A",30));
+        userList.add(new User("A",75));
+        userList.add(new User("C",25));
+        userList.add(new User("C",45));
+        List<String> list = new ArrayList<>();
+        list.add("B");
+        list.add("C");
+        list.add("A");
+        list.add("D");
+        userList.sort(Comparator.comparingInt(o -> list.indexOf(o.getUserName())));
+        Map<String, List<User>> groupBySex = userList.stream().collect(Collectors.groupingBy(User::getUserName,LinkedHashMap::new,Collectors.toList()));
+        for (Map.Entry<String, List<User>> entryUser : groupBySex.entrySet()) {
+            List<User> entryUserList = entryUser.getValue();
+            for (User user : entryUserList) {
+                System.out.println(user.getUserName()+"=>"+user.getUserAge());
+            }
+        }
+
+
+        System.out.println("==================================================");
+
+//
+//        for (Map.Entry<String, List<User>> entryUser : groupBySex.entrySet()) {
+//            List<User> entryUserList = entryUser.getValue();
+//            Collections.sort(entryUserList, new Comparator<User>() {
+//                @Override
+//                public int compare(User o1, User o2) {
+//                    return list.indexOf(o1.getUserName())-list.indexOf(o2.getUserName());
+//                }
+//            });
+//            for (User user : entryUserList) {
+//                System.out.println(user.getUserName()+"=>"+user.getUserAge());
+//            }
+//
+//        }
+//        for (User user : userList) {
+//            System.out.println(user.getUserName()+"=>"+user.getUserAge());
+//        }
+
+//        Map<String,String> map1 = new HashMap<String,String>();
+//        map1.put("AAA","2");
+//        Map<String,String> map2 = new HashMap<String,String>();
+//        map2.put("AAA","0");
+//        Map<String,String> map3 = new HashMap<String,String>();
+//        map3.put("AAA","2");
+//        List<Map<String,String>> list = new ArrayList<>();
+//        list.add(map1);
+//        list.add(map2);
+//        list.add(map3);
+//        String key = "BBBB";
+//        IntSummaryStatistics summary = list.stream()
+//                .collect(Collectors.summarizingInt(map -> map.containsKey(key) ? Integer.parseInt(map.get(key)) : -1));
+//        String maxValue = filterToString(summary.getMax());
+//        String minValue = filterToString(summary.getMin());
+//
+//        System.out.println(maxValue);
+//        System.out.println(minValue);
+//        String[] arr = {};
+//        boolean empty = ArrayUtils.isEmpty(arr);
+//        System.out.println(empty);
+//        Color bule = Color.BLUE;
+//        System.out.println(bule.name());
 
 
 //        Map<String,String> map = new HashMap<String,String>();
@@ -66,6 +125,12 @@ public class Test {
 //        System.out.println(StringUtils.hashKeyForDisk("ADD S1APLE"));
     }
 
+    private static String filterToString(int value) {
+        if (value == -1) {
+            return "-";
+        }
+        return String.valueOf(value);
+    }
 
 
 }

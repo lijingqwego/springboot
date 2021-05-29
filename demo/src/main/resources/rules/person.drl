@@ -1,3 +1,4 @@
+package rules
 import com.example.demo.drools.Person;
 
 dialect  "mvel"
