@@ -1,0 +1,17 @@
+[
+  {
+    "className": "testBean1",
+    "method": "test1",
+    "parameter": "test1",
+    "initDelay":1000,
+    "fixedDelay": 30000,
+    "comment": ""
+  },
+  {
+    "className": "testBean2",
+    "method": "test2",
+    "initDelay":1000,
+    "fixedDelay": 30000,
+    "comment": ""
+  }
+]

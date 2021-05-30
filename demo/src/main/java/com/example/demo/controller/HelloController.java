@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.drools.DroolsConstants;
+import com.example.demo.drools.RuleSetting;
 import com.example.demo.pojo.Refuse;
 import com.example.demo.pojo.User;
+import com.example.demo.schedule.ScheduleManage;
 import com.example.demo.service.IRefuseService;
 import com.example.demo.service.IStudentService;
 import com.example.demo.service.IUserService;
@@ -47,8 +49,14 @@ public class HelloController {
 //                System.out.println(user.getName()+"=>"+user.getId());
 //            }
 //        }
+        ScheduleManage.startSchedule();
         List<String> ageAlis = new ArrayList<>();
-        droolsService.execRules("ageAlis", ageAlis, new Object[]{refuse}, DroolsConstants.RULES_PREFIX_AGE_ALIS);
+        RuleSetting setting = new RuleSetting();
+        setting.setGlobalKey("ageAlis");
+        setting.setGlobalVal(ageAlis);
+        setting.setHandleObject(refuse);
+        setting.setRulePrefix(DroolsConstants.RULES_PREFIX_AGE_ALIS);
+        droolsService.execRules(setting);
         if (CollectionUtils.isNotEmpty(ageAlis)) {
             refuse.setAgeAlis(String.join(",", ageAlis));
         }

@@ -15,17 +15,13 @@ import java.util.stream.Collectors;
 
 public class Test {
 
-    public static void main(String[] args) {
-        
-    }
-
     private static final String table = "t_location_interface_cfg";
     private static final String[] cols = {"cf1"};
 
     enum Color{
         BLUE,RED,GREEN
     }
-    public static void main2(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 
         List<User> userList = new ArrayList<User>();
         userList.add(new User("B",56));

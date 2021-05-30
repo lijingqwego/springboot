@@ -1,16 +1,18 @@
 package com.example.demo.utils;
 
 import com.example.demo.pojo.Refuse;
+import com.example.demo.schedule.ScheduleManage;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DroolsTest {
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         try {
             List<String> ageAlis = new ArrayList<>();
             KieServices ks = KieServices.Factory.get();

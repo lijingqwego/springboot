@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-//然后在com.majiaxueyuan.realm写一个UserRealm做登录权限控制：
+/**
+ * 登录权限控制
+ */
 public class UserRealm extends AuthorizingRealm {
 
     @Autowired
