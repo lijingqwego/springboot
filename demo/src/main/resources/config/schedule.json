@@ -5,13 +5,15 @@
     "parameter": "test1",
     "initDelay":1000,
     "fixedDelay": 30000,
+    "cron": "",
     "comment": ""
   },
   {
     "className": "testBean2",
     "method": "test2",
     "initDelay":1000,
-    "fixedDelay": 30000,
-    "comment": ""
+    "fixedDelay": 0,
+    "cron": "0 */1 * * * ?",
+    "comment": "每隔1分钟执行一次"
   }
 ]

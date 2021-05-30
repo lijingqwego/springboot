@@ -4,7 +4,7 @@ import com.example.demo.drools.DroolsConstants;
 import com.example.demo.drools.RuleSetting;
 import com.example.demo.pojo.Refuse;
 import com.example.demo.pojo.User;
-import com.example.demo.schedule.ScheduleManage;
+import com.example.demo.schedule.ScheduleManager;
 import com.example.demo.service.IRefuseService;
 import com.example.demo.service.IStudentService;
 import com.example.demo.service.IUserService;
@@ -49,7 +49,7 @@ public class HelloController {
 //                System.out.println(user.getName()+"=>"+user.getId());
 //            }
 //        }
-        ScheduleManage.startSchedule();
+        ScheduleManager.startSchedule();
         List<String> ageAlis = new ArrayList<>();
         RuleSetting setting = new RuleSetting();
         setting.setGlobalKey("ageAlis");

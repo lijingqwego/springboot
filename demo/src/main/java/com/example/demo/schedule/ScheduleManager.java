@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
-public class ScheduleManage {
-    private static Logger logger = Logger.getLogger(ScheduleManage.class);
+public class ScheduleManager {
+    private static Logger logger = Logger.getLogger(ScheduleManager.class);
 
     public static void startSchedule() {
         try {

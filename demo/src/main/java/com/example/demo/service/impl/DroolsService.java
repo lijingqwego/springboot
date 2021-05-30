@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.drools.RuleSetting;
-import com.example.demo.schedule.ScheduleManage;
+import com.example.demo.schedule.ScheduleManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.drools.core.base.RuleNameStartsWithAgendaFilter;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DroolsService {
-    private static Logger logger = Logger.getLogger(ScheduleManage.class);
+    private static Logger logger = Logger.getLogger(ScheduleManager.class);
 
     @Autowired
     private KieSession kieSession;

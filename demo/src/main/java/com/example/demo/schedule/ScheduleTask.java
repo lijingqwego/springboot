@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.concurrent.DefaultManagedTaskScheduler;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -14,16 +15,17 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ScheduleTask {
-    private static Logger logger = Logger.getLogger(ScheduleManage.class);
+    private static Logger logger = Logger.getLogger(ScheduleManager.class);
 
     private final DefaultManagedTaskScheduler defaultManagedTaskScheduler;
 
     private final List<ScheduleSetting> scheduleSettingList = new ArrayList<>();
 
     public ScheduleTask() throws IOException {
-        parse();
+        init();
         defaultManagedTaskScheduler = new DefaultManagedTaskScheduler();
     }
 
@@ -52,6 +54,11 @@ public class ScheduleTask {
          * 固定执行周期
          */
         private int fixedDelay;
+
+        /**
+         * cron表达式
+         */
+        private String cron;
 
         public String getClassName() {
             return className;
@@ -92,16 +99,40 @@ public class ScheduleTask {
         public void setFixedDelay(int fixedDelay) {
             this.fixedDelay = fixedDelay;
         }
+
+        public String getCron() {
+            return cron;
+        }
+
+        public void setCron(String cron) {
+            this.cron = cron;
+        }
     }
 
-    private void parse() throws IOException {
+    private void init() throws IOException {
         File file = ResourceUtils.getFile("classpath:config/schedule.json");
         String json = FileUtils.readFileToString(file, "UTF-8");
         scheduleSettingList.addAll(JSONArray.parseArray(json, ScheduleSetting.class));
     }
 
     public void start() {
-        scheduleSettingList.parallelStream().forEach(this::startScheduleWithFixedDelay);
+        scheduleSettingList.parallelStream().forEach((setting) -> {
+            if (StringUtils.isNotEmpty(setting.getCron())) {
+                startScheduleWithCronDelay(setting);
+            } else {
+                startScheduleWithFixedDelay(setting);
+            }
+        });
+    }
+
+    private void startScheduleWithCronDelay(ScheduleSetting setting) {
+        defaultManagedTaskScheduler.schedule(() -> {
+            try {
+                invoke(setting);
+            } catch (Exception e) {
+                logger.error("Schedule task start failed! className=[" + setting.getClassName() + "]", e);
+            }
+        },new CronTrigger(setting.getCron(), TimeZone.getDefault()));
     }
 
     private void startScheduleWithFixedDelay(ScheduleSetting setting) {
