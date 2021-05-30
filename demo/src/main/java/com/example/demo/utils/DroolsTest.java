@@ -1,6 +1,5 @@
 package com.example.demo.utils;
 
-import com.example.demo.drools.Person;
 import com.example.demo.pojo.Refuse;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
@@ -8,8 +7,6 @@ import org.kie.api.runtime.KieSession;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 public class DroolsTest {
 
@@ -18,7 +15,7 @@ public class DroolsTest {
             List<String> ageAlis = new ArrayList<>();
             KieServices ks = KieServices.Factory.get();
             KieContainer kContainer = ks.getKieClasspathContainer();
-            KieSession kSession = kContainer.newKieSession("aaaa.rules");
+            KieSession kSession = kContainer.newKieSession("base.rules");
             Refuse refuse=new Refuse();
             refuse.setAge(700);
             refuse.setSex('女');
