@@ -1,10 +1,10 @@
 package com.example.demo.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.drools.core.base.RuleNameStartsWithAgendaFilter;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
 
 @Service
 public class DroolsService {
@@ -12,8 +12,8 @@ public class DroolsService {
     @Autowired
     private KieSession kieSession;
 
-    public String check(String globalKey, Object globalValue, Object[] objects, String ruleNamePrefix) {
-        if (!StringUtils.isEmpty(globalKey)) {
+    public String execRules(String globalKey, Object globalValue, Object[] objects, String ruleNamePrefix) {
+        if (StringUtils.isNotEmpty(globalKey)) {
             kieSession.setGlobal(globalKey, globalValue);
         }
         for (Object object : objects) {
@@ -26,12 +26,7 @@ public class DroolsService {
 //        RuleNameSerializationAgendaFilter 规则名称序列化代理筛选器（其实好像就是可以执行以上4钟中的一钟）
         int ruleFiredCount = kieSession.fireAllRules(new RuleNameStartsWithAgendaFilter(ruleNamePrefix));
         System.out.println("触发了" + ruleFiredCount + "条规则");
-        System.out.println("---------------------------------");
         return "OK";
-    }
-
-    public Object getGlobal(String globalKey) {
-        return kieSession.getGlobal(globalKey);
     }
 
 }

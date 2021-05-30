@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.drools.DroolsConstants;
 import com.example.demo.pojo.Refuse;
 import com.example.demo.pojo.User;
 import com.example.demo.service.IRefuseService;
 import com.example.demo.service.IStudentService;
 import com.example.demo.service.IUserService;
 import com.example.demo.service.impl.DroolsService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -44,9 +47,9 @@ public class HelloController {
 //                System.out.println(user.getName()+"=>"+user.getId());
 //            }
 //        }
-        droolsService.check("ageAlis", new ArrayList<>(), new Object[]{refuse}, "baseMessage");
-        Object ageAlis = droolsService.getGlobal("ageAlis");
-        if (ageAlis != null) {
+        List<String> ageAlis = new ArrayList<>();
+        droolsService.execRules("ageAlis", ageAlis, new Object[]{refuse}, DroolsConstants.RULES_PREFIX_AGE_ALIS);
+        if (CollectionUtils.isNotEmpty(ageAlis)) {
             refuse.setAgeAlis(ageAlis.toString());
         }
         boolean flag = iRefuseService.addRefuse(refuse);

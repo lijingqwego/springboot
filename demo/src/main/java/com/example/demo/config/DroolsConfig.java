@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.drools.DroolsConstants;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.builder.*;
@@ -17,12 +18,6 @@ import java.io.IOException;
 
 @Configuration
 public class DroolsConfig {
-
-    /**
-     *  rule文件的存放位置
-     */
-    private static final String RULES_PATH = "rules/";
-
     /**
      * 获取到的KieServices其实是一个单例
      */
@@ -32,10 +27,10 @@ public class DroolsConfig {
     public KieFileSystem kieFileSystem() throws IOException {
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-        Resource[] files = resourcePatternResolver.getResources("classpath*:" + RULES_PATH + "**/*.*");
+        Resource[] files = resourcePatternResolver.getResources("classpath*:" + DroolsConstants.RULES_PATH + "**/*.*");
         String path = null;
         for (Resource file : files) {
-            path = RULES_PATH + file.getFilename();
+            path = DroolsConstants.RULES_PATH + file.getFilename();
             kieFileSystem.write(ResourceFactory.newClassPathResource(path, "UTF-8"));
         }
         return kieFileSystem;
