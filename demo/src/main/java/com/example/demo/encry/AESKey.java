@@ -3,6 +3,7 @@ package com.example.demo.encry;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
@@ -12,9 +13,9 @@ public class AESKey {
     /*
      * 加密用的Key 可以用26个字母和数字组成 此处使用AES-128-CBC加密模式，key需要为16位。
      */
-    private String aKey = "smkldospdosldaaa";// key，可自行修改
-    private String sKey = "smkldospdosldmac";// key，可自行修改
-    private String ivParameter = "0392039203920300";// 偏移量,可自行修改
+    private final String aKey = "smkldospdosldaaa";// key，可自行修改
+    private final String sKey = "smkldospdosldmac";// key，可自行修改
+    private final String ivParameter = "0392039203920300";// 偏移量,可自行修改
     private static AESKey instance = null;
 
     private AESKey() {
@@ -41,7 +42,7 @@ public class AESKey {
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         IvParameterSpec iv = new IvParameterSpec(vector.getBytes());// 使用CBC模式，需要一个向量iv，可增加加密算法的强度
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-        byte[] encrypted = cipher.doFinal(encData.getBytes("utf-8"));
+        byte[] encrypted = cipher.doFinal(encData.getBytes(StandardCharsets.UTF_8));
         Encoder encoder = Base64.getEncoder();
         return encoder.encodeToString(encrypted);// 此处使用BASE64做转码。
     }
@@ -54,7 +55,7 @@ public class AESKey {
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
             IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());// 使用CBC模式，需要一个向量iv，可增加加密算法的强度
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-            byte[] encrypted = cipher.doFinal(sSrc.getBytes("utf-8"));
+            byte[] encrypted = cipher.doFinal(sSrc.getBytes(StandardCharsets.UTF_8));
             Encoder encoder = Base64.getEncoder();
             return encoder.encodeToString(encrypted);// 此处使用BASE64做转码。
         } catch (Exception e) {
@@ -69,7 +70,7 @@ public class AESKey {
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
             IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());// 使用CBC模式，需要一个向量iv，可增加加密算法的强度
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-            byte[] encrypted = cipher.doFinal(sSrc.getBytes("utf-8"));
+            byte[] encrypted = cipher.doFinal(sSrc.getBytes(StandardCharsets.UTF_8));
             Encoder encoder = Base64.getEncoder();
             return encoder.encodeToString(encrypted);// 此处使用BASE64做转码。
         } catch (Exception e) {
@@ -80,7 +81,7 @@ public class AESKey {
     // 解密
     public String decryptApp(String sSrc) throws Exception {
         try {
-            byte[] raw = aKey.getBytes("ASCII");
+            byte[] raw = aKey.getBytes(StandardCharsets.US_ASCII);
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());
@@ -88,8 +89,7 @@ public class AESKey {
             Decoder decoder = Base64.getDecoder();
             byte[] encrypted1 = decoder.decode(sSrc);// 先用base64解密
             byte[] original = cipher.doFinal(encrypted1);
-            String originalString = new String(original, "utf-8");
-            return originalString;
+            return new String(original, StandardCharsets.UTF_8);
         } catch (Exception ex) {
             return null;
         }
@@ -98,7 +98,7 @@ public class AESKey {
     // 解密
     public String decrypt(String sSrc) {
         try {
-            byte[] raw = sKey.getBytes("ASCII");
+            byte[] raw = sKey.getBytes(StandardCharsets.US_ASCII);
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());
@@ -106,8 +106,7 @@ public class AESKey {
             Decoder decoder = Base64.getDecoder();
             byte[] encrypted1 = decoder.decode(sSrc);// 先用base64解密
             byte[] original = cipher.doFinal(encrypted1);
-            String originalString = new String(original, "utf-8");
-            return originalString;
+            return new String(original, StandardCharsets.UTF_8);
         } catch (Exception ex) {
             return null;
         }
@@ -115,7 +114,7 @@ public class AESKey {
 
     public String decrypt(String sSrc, String key, String ivs) throws Exception {
         try {
-            byte[] raw = key.getBytes("ASCII");
+            byte[] raw = key.getBytes(StandardCharsets.US_ASCII);
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             IvParameterSpec iv = new IvParameterSpec(ivs.getBytes());
@@ -123,15 +122,14 @@ public class AESKey {
             Decoder decoder = Base64.getDecoder();
             byte[] encrypted1 = decoder.decode(sSrc);// 先用base64解密
             byte[] original = cipher.doFinal(encrypted1);
-            String originalString = new String(original, "utf-8");
-            return originalString;
+            return new String(original, StandardCharsets.UTF_8);
         } catch (Exception ex) {
             return null;
         }
     }
 
     public static String encodeBytes(byte[] bytes) {
-        StringBuffer strBuf = new StringBuffer();
+        StringBuilder strBuf = new StringBuilder();
 
         for (int i = 0; i < bytes.length; i++) {
             strBuf.append((char) (((bytes[i] >> 4) & 0xF) + ((int) 'a')));

@@ -50,7 +50,7 @@ public class HelloController {
         List<String> ageAlis = new ArrayList<>();
         droolsService.execRules("ageAlis", ageAlis, new Object[]{refuse}, DroolsConstants.RULES_PREFIX_AGE_ALIS);
         if (CollectionUtils.isNotEmpty(ageAlis)) {
-            refuse.setAgeAlis(ageAlis.toString());
+            refuse.setAgeAlis(String.join(",", ageAlis));
         }
         boolean flag = iRefuseService.addRefuse(refuse);
         return flag ? "success" : "failed";
