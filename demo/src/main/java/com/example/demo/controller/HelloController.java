@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.drools.DroolsConstants;
 import com.example.demo.drools.RuleSetting;
 import com.example.demo.pojo.Refuse;
@@ -37,7 +38,8 @@ public class HelloController {
     private DroolsService droolsService;
 
     @PostMapping("/hello")
-    public String hello(Refuse refuse) {
+    @ResponseBody
+    public JSONObject hello(Refuse refuse) {
 //        int topN = 4;
 //        List<String> list = iUserService.selectUserNameByMaxAgeTop(topN);
 //        List<Student> userList = iStudentService.selectNameList();
@@ -49,7 +51,6 @@ public class HelloController {
 //                System.out.println(user.getName()+"=>"+user.getId());
 //            }
 //        }
-        ScheduleManager.startSchedule();
         List<String> ageAlis = new ArrayList<>();
         RuleSetting setting = new RuleSetting();
         setting.setGlobalKey("ageAlis");
@@ -61,7 +62,10 @@ public class HelloController {
             refuse.setAgeAlis(String.join(",", ageAlis));
         }
         boolean flag = iRefuseService.addRefuse(refuse);
-        return flag ? "success" : "failed";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("stats", flag ? "success" : "failed");
+        jsonObject.put("result", flag ? ageAlis : CollectionUtils.EMPTY_COLLECTION);
+        return jsonObject;
     }
 
     @RequiresRoles(value = {"ordinary"})
