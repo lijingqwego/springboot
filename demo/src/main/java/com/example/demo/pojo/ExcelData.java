@@ -1,16 +1,25 @@
 package com.example.demo.pojo;
 
-import com.example.demo.drools.Person;
-import org.apache.poi.ss.formula.functions.T;
-
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class ExcelData {
 
+    private int maxLongOption;
+
     private String[] options;
 
+    private Map<String, List<String>> linkageOptions;
+
     private List<?> dataList;
+
+    public int getMaxLongOption() {
+        return maxLongOption;
+    }
+
+    public void setMaxLongOption(int maxLongOption) {
+        this.maxLongOption = maxLongOption;
+    }
 
     public String[] getOptions() {
         return options;
@@ -26,5 +35,13 @@ public class ExcelData {
 
     public void setDataList(List<?> dataList) {
         this.dataList = dataList;
+    }
+
+    public Map<String, List<String>> getLinkageOptions() {
+        return linkageOptions;
+    }
+
+    public void setLinkageOptions(Map<String, List<String>> linkageOptions) {
+        this.linkageOptions = linkageOptions;
     }
 }
