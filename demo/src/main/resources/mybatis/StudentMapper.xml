@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace ="com.kaisn.dao.StudentMapper">
+	<!-- 查询 -->
+	<select id="selectNameList" resultType="com.kaisn.pojo.Student">
+		SELECT id,name FROM t_student
+	</select>
+
+	<!-- 模糊查询 -->
+	<select id="getStudentList" resultType="com.kaisn.pojo.Student" parameterType="java.lang.String">
+		SELECT * FROM t_student 
+		<where>
+			<if test="name!=null">
+				name LIKE CONCAT(CONCAT('%', #{name}), '%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询 -->
+	<select id="getStudentInfo" resultType="com.kaisn.pojo.Student" parameterType="java.lang.String">
+		SELECT * FROM t_student where no=#{no,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="addStudent" parameterType="com.kaisn.pojo.Student">
+		insert into t_student
+		<trim prefix="(" suffixOverrides="," suffix=")">
+			<if test="no != null and no != ''">
+				no,
+			</if>
+			<if test="name != null and name != ''">
+				name,
+			</if>
+			<if test="age != null and age != ''">
+				age,
+			</if>
+			<if test="place != null and place != ''">
+				place,
+			</if>
+			<if test="dept != null and dept != ''">
+				dept,
+			</if>
+		</trim>
+		<trim prefix="values(" suffixOverrides="," suffix=")">
+			<if test="no != null and no != ''">
+				no=#{no,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null and name != ''">
+				name=#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null and age != ''">
+				age=#{age,jdbcType=VARCHAR},
+			</if>
+			<if test="place != null and place != ''">
+				place=#{place,jdbcType=VARCHAR},
+			</if>
+			<if test="dept != null and dept != ''">
+				dept=#{dept,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="deleteStudent" parameterType="java.lang.String">
+		delete from t_student where no=#{no,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 更新-->
+	<update id="updateStudent" parameterType="com.kaisn.pojo.Student">
+		update t_student
+		<set>
+			<if test="name != null and name != ''">
+				name=#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null and gender != ''">
+				gender=#{gender,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null and age != ''">
+				age=#{age,jdbcType=VARCHAR},
+			</if>
+			<if test="place != null and place != ''">
+				place=#{place,jdbcType=VARCHAR},
+			</if>
+			<if test="dept != null and dept != ''">
+				dept=#{dept,jdbcType=VARCHAR}
+			</if>
+		</set>
+		<where>
+			no=#{no,jdbcType=VARCHAR}
+		</where>
+	</update>
+	
+	<insert id="addStudentList" parameterType="java.util.Vector">
+		insert into t_student
+		(
+		no,
+		name,
+		gender,
+		age,
+		place,
+		dept
+		) 
+		values
+		<foreach collection ="list" item="student" index= "index" separator =",">
+		(
+		#{student.no,jdbcType=VARCHAR},
+		#{student.name,jdbcType=VARCHAR},
+		#{student.gender,jdbcType=VARCHAR},
+		#{student.age,jdbcType=VARCHAR},
+		#{student.place,jdbcType=VARCHAR},
+		#{student.dept,jdbcType=VARCHAR}
+		)
+		</foreach >
+	</insert>
+	
+</mapper>

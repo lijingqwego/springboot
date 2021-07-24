@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 加载连接数据库配置文件 -->
+	<properties resource="config/jdbc.properties"/>
+	<typeAliases>
+		<!-- 这个包下面的所有类都使用默认的同义词  两个  一个是类名本身，还有一个类名的首字母小写 -->
+		<package name="com.example.demo.mapper"/>
+	</typeAliases>
+	<!-- 配置事务管理和数据库连接池 -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driver}"/>
+				<property name="url" value="${jdbc.url}"/>
+				<property name="username" value="${jdbc.username}"/>
+				<property name="password" value="${jdbc.password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<mappers>
+		<package name="com.example.demo.mapper"/>
+	</mappers>
+</configuration>
