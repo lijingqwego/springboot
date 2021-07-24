@@ -96,14 +96,6 @@ class AddDialog extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "输入的年龄必须是0~100之间的数字");
 				return ;
 			}
-//			Object[] values=new Object[6];
-//			for (int i = 0; i < textFields.length; i++) {
-//				if(i==2){
-//					values[i]=genderBox.getSelectedIndex();
-//					continue;
-//				}
-//				values[i]=textFields[i].getText();
-//			}
 			StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
 			Student student = new Student();
 			student.setNo(no);
@@ -113,7 +105,6 @@ class AddDialog extends JDialog implements ActionListener {
 			student.setPlace(textFields[4].getText());
 			student.setDept(textFields[5].getText());
 			mapper.addStudent(student);
-			//DbUtils.updateTable("insert into t_student values(?,?,?,?,?,?)", values);
 			this.dispose();
 			MapperUtil.closeUpdSession();
 		} else if (e.getActionCommand().equals(Constans.Action.CANCLE)) {

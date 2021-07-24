@@ -49,22 +49,19 @@ class UpdateDialog extends JDialog implements ActionListener {
             JPanel jPanel = new JPanel();
             jPanel.setLayout(gridLayout);
             jPanel.add(labels[i]);
-            switch (i) {
-                case 2:
-                    genderBox = new JComboBox<String>();
-                    genderBox.addItem("男");
-                    genderBox.addItem("女 ");
-                    genderBox.setSelectedIndex(com.getValueAt(row, i).equals("女") ? 1 : 0);
-                    jPanel.add(genderBox);
-                    break;
-                default:
-                    textFields[i] = new JTextField(10);
-                    textFields[i].setText(com.getValueAt(row, i).toString());
-                    if (i == 0) {
-                        textFields[i].setEditable(false);
-                    }
-                    jPanel.add(textFields[i]);
-                    break;
+            if (i == 2) {
+                genderBox = new JComboBox<String>();
+                genderBox.addItem("男");
+                genderBox.addItem("女 ");
+                genderBox.setSelectedIndex(com.getValueAt(row, i).equals("女") ? 1 : 0);
+                jPanel.add(genderBox);
+            } else {
+                textFields[i] = new JTextField(10);
+                textFields[i].setText(com.getValueAt(row, i).toString());
+                if (i == 0) {
+                    textFields[i].setEditable(false);
+                }
+                jPanel.add(textFields[i]);
             }
             jPanel.add(new JLabel());
             centerPanel.add(jPanel);
@@ -108,7 +105,6 @@ class UpdateDialog extends JDialog implements ActionListener {
             student.setDept(textFields[5].getText());
             mapper.updateStudent(student);
             MapperUtil.closeUpdSession();
-            //DbUtils.updateTable("update t_student set name=?,gender=?,age=?,place=?,dept=? where no=?", values);
             this.dispose();
         } else if (e.getActionCommand().equals(Constans.Action.CANCLE)) {
             this.dispose();
