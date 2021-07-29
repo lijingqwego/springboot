@@ -1,19 +1,45 @@
 package com.example.demo.utils;
 
 
-
 import com.example.demo.pojo.User;
-import com.sun.istack.Pool;
-import org.mortbay.util.ajax.JSON;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Test {
+
+    public static void main(String[] args) throws Exception {
+        Class.forName("org.sqlite.JDBC");
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:test.db");
+        Statement stat = conn.createStatement();
+        stat.executeUpdate("drop table if exists people;");
+        stat.executeUpdate("create table people (name, occupation);");
+        PreparedStatement prep = conn.prepareStatement("insert into people values (?, ?);");
+
+        prep.setString(1, "Gandhi");
+        prep.setString(2, "politics");
+        prep.addBatch();
+        prep.setString(1, "Turing");
+        prep.setString(2, "computers");
+        prep.addBatch();
+        prep.setString(1, "Wittgenstein");
+        prep.setString(2, "smartypants");
+        prep.addBatch();
+
+        conn.setAutoCommit(false);
+        prep.executeBatch();
+        conn.setAutoCommit(true);
+
+        ResultSet rs = stat.executeQuery("select * from people;");
+        while (rs.next()) {
+            System.out.println("name = " + rs.getString("name"));
+            System.out.println("job = " + rs.getString("occupation"));
+        }
+        rs.close();
+        conn.close();
+    }
 
     private static final String table = "t_location_interface_cfg";
     private static final String[] cols = {"cf1"};
@@ -21,7 +47,7 @@ public class Test {
     enum Color{
         BLUE,RED,GREEN
     }
-    public static void main(String[] args) throws IOException {
+    public static void mainddd(String[] args) throws IOException {
 
         List<User> userList = new ArrayList<User>();
         userList.add(new User("B",56));

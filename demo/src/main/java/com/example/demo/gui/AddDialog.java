@@ -2,6 +2,7 @@ package com.example.demo.gui;
 
 import com.example.demo.mapper.StudentMapper;
 import com.example.demo.pojo.Student;
+import com.example.demo.utils.DbUtils;
 import com.example.demo.utils.MapperUtil;
 
 import java.awt.BorderLayout;
@@ -47,17 +48,14 @@ class AddDialog extends JDialog implements ActionListener {
 			JPanel jPanel = new JPanel();
 			jPanel.setLayout(gridLayout);
 			jPanel.add(labels[i]);
-			switch (i) {
-			case 2:
+			if (i == 2) {
 				genderBox = new JComboBox<String>();
 				genderBox.addItem("男");
 				genderBox.addItem("女 ");
 				jPanel.add(genderBox);
-				break;
-			default:
+			} else {
 				textFields[i] = new JTextField(10);
 				jPanel.add(textFields[i]);
-				break;
 			}
 			jPanel.add(new JLabel());
 			centerPanel.add(jPanel);
@@ -96,15 +94,24 @@ class AddDialog extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "输入的年龄必须是0~100之间的数字");
 				return ;
 			}
-			StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
-			Student student = new Student();
-			student.setNo(no);
-			student.setName(textFields[1].getText());
-			student.setGender(genderBox.getSelectedIndex()+"");
-			student.setAge(age);
-			student.setPlace(textFields[4].getText());
-			student.setDept(textFields[5].getText());
-			mapper.addStudent(student);
+//			StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
+//			Student student = new Student();
+//			student.setNo(no);
+//			student.setName(textFields[1].getText());
+//			student.setGender(genderBox.getSelectedIndex()+"");
+//			student.setAge(age);
+//			student.setPlace(textFields[4].getText());
+//			student.setDept(textFields[5].getText());
+			//mapper.addStudent(student);
+			Object[] values=new Object[6];
+			for (int i = 0; i < textFields.length; i++) {
+				if(i==2){
+					values[i]=genderBox.getSelectedIndex();
+					continue;
+				}
+				values[i]=textFields[i].getText();
+			}
+			DbUtils.updateTable("insert into t_student values(?,?,?,?,?,?)", values);
 			this.dispose();
 			MapperUtil.closeUpdSession();
 		} else if (e.getActionCommand().equals(Constans.Action.CANCLE)) {

@@ -2,6 +2,7 @@ package com.example.demo.gui;
 
 import com.example.demo.mapper.StudentMapper;
 import com.example.demo.pojo.Student;
+import com.example.demo.utils.DbUtils;
 import com.example.demo.utils.ExcelUtils;
 import com.example.demo.utils.MapperUtil;
 
@@ -89,6 +90,7 @@ public class AppMainUI extends JFrame implements ActionListener {
 
         comInfo = new CommonTableModel();
         tabel = new JTable(comInfo);
+        tabel.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollPanel = new JScrollPane(tabel);
 
         this.setTitle("学生管理系统");
@@ -108,7 +110,9 @@ public class AppMainUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(Constans.Action.SEARCH)) {// 查询
             String name = searchField.getText().trim();
-            comInfo = new CommonTableModel(name);
+            String sql = "select * from t_student where name like ?";
+			comInfo = new CommonTableModel(sql, new Object[] { "%"+name+"%" });
+            //comInfo = new CommonTableModel(name);
             tabel.setModel(comInfo);
         } else if (e.getActionCommand().equals(Constans.Action.SELECT_ALL)) {// 查询全部
             comInfo = new CommonTableModel();
@@ -181,10 +185,10 @@ public class AppMainUI extends JFrame implements ActionListener {
                 return;
             }
             Object no = comInfo.getValueAt(row, 0);
-            StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
-            mapper.deleteStudent(no.toString());
-            MapperUtil.closeUpdSession();
-            //DbUtils.updateTable("delete from t_student where no=?", new Object[] { no });
+//            StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
+//            mapper.deleteStudent(no.toString());
+//            MapperUtil.closeUpdSession();
+            DbUtils.updateTable("delete from t_student where no=?", new Object[] { no });
             comInfo = new CommonTableModel();
             tabel.setModel(comInfo);
         }

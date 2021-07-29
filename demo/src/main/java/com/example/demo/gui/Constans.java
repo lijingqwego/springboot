@@ -6,6 +6,8 @@ public class Constans {
 
     public static final String[] TITLES = {"编号", "姓名", "性别", "年龄", "籍贯", "院系"};
 
+    public static final String SELECT_SQL="select * from t_student;";
+
     //Excel导出模板
     public static final String Excel_Export_Template = "1";
     //Excel导出数据

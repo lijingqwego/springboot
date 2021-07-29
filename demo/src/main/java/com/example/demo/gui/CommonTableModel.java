@@ -2,6 +2,7 @@ package com.example.demo.gui;
 
 import com.example.demo.mapper.StudentMapper;
 import com.example.demo.pojo.Student;
+import com.example.demo.utils.DbUtils;
 import com.example.demo.utils.MapperUtil;
 
 import java.util.Vector;
@@ -14,6 +15,12 @@ class CommonTableModel extends AbstractTableModel {
 
     private Vector<Vector<Object>> rowData = new Vector<Vector<Object>>();
     private Vector<String> colnumNames;
+
+    public CommonTableModel(String sql, Object[] objects) {
+        this.setColnumNames();
+//        this.setRowData(null);
+        this.rowData= DbUtils.selectTable(sql, objects);
+    }
 
     public int getRowCount() {
         return this.rowData.size();
@@ -38,7 +45,8 @@ class CommonTableModel extends AbstractTableModel {
 
     public CommonTableModel() {
         this.setColnumNames();
-        this.setRowData(null);
+        //this.setRowData(null);
+        this.rowData=DbUtils.selectTable(Constans.SELECT_SQL, new Object[]{});
     }
 
     private void setColnumNames() {
