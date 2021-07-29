@@ -112,6 +112,13 @@
             <artifactId>kie-spring</artifactId>
             <version>7.23.0.Final</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.36.0.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
