@@ -35,10 +35,10 @@ public class SymmetricEncoder {
             //生成一个128位的随机源,根据传入的字节数组
             keygen.init(128, secureRandom);
             //3.产生原始对称密钥
-            SecretKey original_key = keygen.generateKey();
+            SecretKey originalKey = keygen.generateKey();
 
             //4.获得原始对称密钥的字节数组
-            byte[] raw = original_key.getEncoded();
+            byte[] raw = originalKey.getEncoded();
             //5.根据字节数组生成AES密钥
             SecretKey key = new SecretKeySpec(raw, "AES");
 
@@ -47,16 +47,16 @@ public class SymmetricEncoder {
             //7.初始化密码器，第一个参数为加密(Encrypt_mode)或者解密解密(Decrypt_mode)操作，第二个参数为使用的KEY
             cipher.init(Cipher.ENCRYPT_MODE, key);
             //8.获取加密内容的字节数组(这里要设置为utf-8)不然内容中如果有中文和英文混合中文就会解密为乱码
-            byte[] byte_encode = content.getBytes(StandardCharsets.UTF_8);
+            byte[] byteEncode = content.getBytes(StandardCharsets.UTF_8);
             //9.根据密码器的初始化方式--加密：将数据加密
-            byte[] byte_AES = cipher.doFinal(byte_encode);
+            byte[] byteAES = cipher.doFinal(byteEncode);
             //10.将加密后的数据转换为字符串
             //这里用Base64Encoder中会找不到包
             //解决办法：
             //在项目的Build path中先移除JRE System Library，再添加库JRE System Library，重新编译后就一切正常了。
             Encoder encoder = Base64.getEncoder();
             //11.将字符串返回
-            return encoder.encodeToString(byte_AES);
+            return encoder.encodeToString(byteAES);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
         }
@@ -83,9 +83,9 @@ public class SymmetricEncoder {
             //生成一个128位的随机源,根据传入的字节数组
             keygen.init(128, secureRandom);
             //3.产生原始对称密钥
-            SecretKey original_key = keygen.generateKey();
+            SecretKey originalKey = keygen.generateKey();
             //4.获得原始对称密钥的字节数组
-            byte[] raw = original_key.getEncoded();
+            byte[] raw = originalKey.getEncoded();
             //5.根据字节数组生成AES密钥
             SecretKey key = new SecretKeySpec(raw, "AES");
             //6.根据指定算法AES自成密码器
@@ -94,12 +94,12 @@ public class SymmetricEncoder {
             cipher.init(Cipher.DECRYPT_MODE, key);
             //8.将加密并编码后的内容解码成字节数组
             Decoder decoder = Base64.getDecoder();
-            byte[] byte_content = decoder.decode(content);
+            byte[] byteContent = decoder.decode(content);
             /*
              * 解密
              */
-            byte[] byte_decode = cipher.doFinal(byte_content);
-            return new String(byte_decode, StandardCharsets.UTF_8);
+            byte[] byteDecode = cipher.doFinal(byteContent);
+            return new String(byteDecode, StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
         }

@@ -7,11 +7,13 @@ import com.example.demo.utils.DbUtils;
 import com.example.demo.utils.ExcelUtils;
 import com.example.demo.utils.MapperUtil;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -86,8 +88,8 @@ public class AppMainUI extends JFrame implements ActionListener {
 
         this.setTitle("学生管理系统");
         this.add(scrollPanel);
-        this.add(northPanel, "North");
-        this.add(southPanel, "South");
+        this.add(northPanel, BorderLayout.NORTH);
+        this.add(southPanel, BorderLayout.SOUTH);
         this.setSize(600, 450);
         this.setLocation(200, 150);
         this.setResizable(false);
