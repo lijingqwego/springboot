@@ -45,8 +45,8 @@ class CommonTableModel extends AbstractTableModel {
 
     public CommonTableModel() {
         this.setColnumNames();
-        //this.setRowData(null);
-        this.rowData=DbUtils.selectTable(Constans.SELECT_SQL, new Object[]{});
+        this.setRowData(null);
+//        this.rowData=DbUtils.selectTable(Constans.SELECT_SQL, new Object[]{});
     }
 
     private void setColnumNames() {
@@ -63,7 +63,7 @@ class CommonTableModel extends AbstractTableModel {
         Vector<Student> studentList = null;
         try {
             StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
-            studentList = mapper.getStudentList(name);
+            studentList = mapper.getStudentListByName("%"+name+"%");
             for (Student student : studentList) {
                 Vector<Object> vector = new Vector<Object>();
                 vector.add(student.getNo());
@@ -77,7 +77,7 @@ class CommonTableModel extends AbstractTableModel {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            //MapperUtil.closeSession();
+            MapperUtil.closeSession();
         }
     }
 }

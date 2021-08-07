@@ -23,6 +23,16 @@ public interface StudentMapper {
             "</script>"})
     Vector<Student> getStudentList(@Param("name") String name);
 
+    @Select({"<script>",
+            "SELECT * FROM t_student",
+            "<where>",
+            "<if test=\"name!=null or name!=''\">",
+            "name LIKE #{name}",
+            "</if>",
+            "</where>",
+            "</script>"})
+    Vector<Student> getStudentListByName(@Param("name") String name);
+
     @Select("SELECT * FROM t_student where no=#{no,jdbcType=VARCHAR}")
     Student getStudentInfo(@Param("no") String no);
 
@@ -41,7 +51,7 @@ public interface StudentMapper {
     void addStudentList(@Param(value = "students") Vector<Student> students);
 
     @Delete("delete from t_student where no=#{no} or name=#{name}")
-    void deleteStudent(@Param("no") String no,@Param("name") String name);
+    void deleteStudent(@Param("no") String no, @Param("name") String name);
 
     @Update({"<script>",
             "update t_student ",
@@ -65,4 +75,12 @@ public interface StudentMapper {
             "where no=#{student.no}",
             "</script>"})
     void updateStudent(@Param(value = "student") Student student);
+
+    @Delete({"<script>",
+            "delete from t_student where no in ",
+            "<foreach collection='noList' item='item' index='index' open='(' separator=',' close=')'>",
+            "#{item}",
+            "</foreach>",
+            "</script>",})
+    void batchDeleteStudent(@Param(value = "noList") List<String> noList);
 }

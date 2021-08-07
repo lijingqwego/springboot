@@ -146,7 +146,7 @@ public class ExcelUtils {
 					student.setGender("男".equals(cell2.getStringCellValue()) ? "0" : "1");
 					// 年龄
 					Cell cell3 = row0.getCell(3);
-					student.setAge(cell3.getStringCellValue());
+					student.setAge(cell3.getNumericCellValue()+"");
 					// 籍贯
 					Cell cell4 = row0.getCell(4);
 					student.setPlace(cell4.getStringCellValue());

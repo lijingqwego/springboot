@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.*;
 import java.util.List;
@@ -103,9 +104,9 @@ public class AppMainUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(Constans.Action.SEARCH)) {// 查询
             String name = searchField.getText().trim();
-            String sql = "select * from t_student where name like ?";
-			comInfo = new CommonTableModel(sql, new Object[] { "%"+name+"%" });
-            //comInfo = new CommonTableModel(name);
+//            String sql = "select * from t_student where name like ?";
+//			comInfo = new CommonTableModel(sql, new Object[] { "%"+name+"%" });
+            comInfo = new CommonTableModel(name);
             table.setModel(comInfo);
         } else if (e.getActionCommand().equals(Constans.Action.SELECT_ALL)) {// 查询全部
             comInfo = new CommonTableModel();
@@ -118,7 +119,7 @@ public class AppMainUI extends JFrame implements ActionListener {
                 FileOutputStream out = new FileOutputStream(file);
                 StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
                 String name = searchField.getText().trim();
-                Vector<Student> students = mapper.getStudentList(name);
+                Vector<Student> students = mapper.getStudentListByName("%"+name+"%");
                 Map<String, Object> param = new HashMap<String, Object>();
                 param.put("title", Constans.TITLES);
                 param.put("students", students);
@@ -140,12 +141,14 @@ public class AppMainUI extends JFrame implements ActionListener {
                 } else if (file.isFile()) {
                     System.out.println("文件:" + file.getAbsolutePath());
                 }
-                ExcelReader excelReader = new ExcelReader();
-                List<List<String>> lists = excelReader.readExcel(file.getCanonicalPath(), 1);
-//                StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
-//                mapper.addStudentList(students);
-//                MapperUtil.closeUpdSession();
-                DbUtils.batchupdateTable("insert into t_student values(?,?,?,?,?,?)", lists);
+                FileInputStream inputStream = new FileInputStream(file);
+                Vector<Student> students = ExcelUtils.readExcel(inputStream, jfc.getSelectedFile().getName());
+                StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
+                mapper.addStudentList(students);
+                MapperUtil.closeUpdSession();
+//                ExcelReader excelReader = new ExcelReader();
+//                List<List<String>> lists = excelReader.readExcel(file.getCanonicalPath(), 1);
+//                DbUtils.batchupdateTable("insert into t_student values(?,?,?,?,?,?)", lists);
             } catch (Exception e1) {
                 e1.printStackTrace();
                 JOptionPane.showMessageDialog(this, "导入数据失败");
@@ -173,27 +176,29 @@ public class AppMainUI extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "请选中要删除的行");
                 return;
             }
+            List<String> noList = new ArrayList<>(selectedRows.length);
             List<String> nameList = new ArrayList<>(selectedRows.length);
-            List<List<String>> lists = new ArrayList<>(selectedRows.length);
+//            List<List<String>> lists = new ArrayList<>(selectedRows.length);
             for (int row : selectedRows) {
-                List<String> list = new ArrayList<>(2);
                 Object no = comInfo.getValueAt(row, 0);
                 Object name = comInfo.getValueAt(row, 1);
-                list.add(no.toString());
-                list.add(name.toString());
+                noList.add(no.toString());
+//                List<String> list = new ArrayList<>(2);
+//                list.add(no.toString());
+//                list.add(name.toString());
                 nameList.add(name.toString());
-                lists.add(list);
+//                lists.add(list);
             }
             int result = JOptionPane.showConfirmDialog(this, "确认要删除"+nameList+"学生?", "提示", JOptionPane.WARNING_MESSAGE);
             // 取消
             if (result == 2) {
                 return;
             }
-//            StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
-//            mapper.deleteStudent(no.toString());
-//            MapperUtil.closeUpdSession();
-            DbUtils.batchupdateTable("delete from t_student where no=? or name=?", lists);
-            lists.clear();
+            StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
+            mapper.batchDeleteStudent(noList);
+            MapperUtil.closeUpdSession();
+//            DbUtils.batchupdateTable("delete from t_student where no=? or name=?", lists);
+//            lists.clear();
             nameList.clear();
             comInfo = new CommonTableModel();
             table.setModel(comInfo);
