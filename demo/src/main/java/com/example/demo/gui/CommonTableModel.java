@@ -4,6 +4,7 @@ import com.example.demo.mapper.StudentMapper;
 import com.example.demo.pojo.Student;
 import com.example.demo.utils.DbUtils;
 import com.example.demo.utils.MapperUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Vector;
 
@@ -60,10 +61,15 @@ class CommonTableModel extends AbstractTableModel {
     }
 
     private void setRowData(String name) {
+
         Vector<Student> studentList = null;
         try {
             StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
-            studentList = mapper.getStudentListByName("%"+name+"%");
+            if (StringUtils.isNotEmpty(name)) {
+                studentList = mapper.getStudentListByName(name);
+            } else {
+                studentList = mapper.getAllStudentList();
+            }
             for (Student student : studentList) {
                 Vector<Object> vector = new Vector<Object>();
                 vector.add(student.getNo());

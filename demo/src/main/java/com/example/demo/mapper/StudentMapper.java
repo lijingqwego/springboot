@@ -23,11 +23,14 @@ public interface StudentMapper {
             "</script>"})
     Vector<Student> getStudentList(@Param("name") String name);
 
+    @Select("SELECT * FROM t_student")
+    Vector<Student> getAllStudentList();
+
     @Select({"<script>",
             "SELECT * FROM t_student",
             "<where>",
             "<if test=\"name!=null or name!=''\">",
-            "name LIKE #{name}",
+            "name LIKE '%'||#{name}||'%'",
             "</if>",
             "</where>",
             "</script>"})

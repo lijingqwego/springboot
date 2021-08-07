@@ -119,7 +119,7 @@ public class AppMainUI extends JFrame implements ActionListener {
                 FileOutputStream out = new FileOutputStream(file);
                 StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
                 String name = searchField.getText().trim();
-                Vector<Student> students = mapper.getStudentListByName("%"+name+"%");
+                Vector<Student> students = mapper.getStudentListByName(name);
                 Map<String, Object> param = new HashMap<String, Object>();
                 param.put("title", Constans.TITLES);
                 param.put("students", students);
