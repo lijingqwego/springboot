@@ -86,7 +86,7 @@ class AddDialog extends JDialog implements ActionListener {
 		if (e.getActionCommand().equals(Constans.Action.ADD)) {
 			String no = textFields[0].getText();
 			String age = textFields[3].getText();
-			if(no!=null && !no.matches("[0-9]{0,5}")){
+			if(no!=null && !no.matches("[0-9]{0,8}")){
 				JOptionPane.showMessageDialog(this, "输入的编号必须是小于5位的数字");
 				return ;
 			}

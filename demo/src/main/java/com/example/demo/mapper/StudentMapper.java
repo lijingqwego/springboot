@@ -32,7 +32,7 @@ public interface StudentMapper {
 
     @Insert({
             "<script>",
-            "insert into t_student(no,name,gender,age,place,dept) values ",
+            "insert into t_student(no,name,gender,age,place,dept) values",
             "<foreach collection='students' item='item' index='index' separator=','>",
             "(#{item.no},#{item.name},#{item.gender},#{item.age},#{item.place},#{item.dept})",
             "</foreach>",
@@ -40,8 +40,8 @@ public interface StudentMapper {
     })
     void addStudentList(@Param(value = "students") Vector<Student> students);
 
-    @Delete("delete from t_student where no=#{no}")
-    void deleteStudent(@Param("no") String no);
+    @Delete("delete from t_student where no=#{no} or name=#{name}")
+    void deleteStudent(@Param("no") String no,@Param("name") String name);
 
     @Update({"<script>",
             "update t_student ",

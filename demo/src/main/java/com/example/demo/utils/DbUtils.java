@@ -1,6 +1,7 @@
 package com.example.demo.utils;
 
 import java.sql.*;
+import java.util.List;
 import java.util.Vector;
 
 public class DbUtils {
@@ -8,6 +9,8 @@ public class DbUtils {
     private static final String url = "jdbc:sqlite:test.db";
     private static final String username = "root";
     private static final String password = "asd3135";
+
+    private static final int BATCH_SIZE = 20;
 
     /**
      * 加载驱动
@@ -69,6 +72,35 @@ public class DbUtils {
             e.printStackTrace();
         }
         return list;
+    }
+
+    /**
+     * 增、删、改数据操作
+     *
+     * @param sql
+     * @param lists
+     * @return
+     */
+    public static int batchupdateTable(String sql, List<List<String>> lists) {
+        int count = 0;
+        try {
+            Connection connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            for (int i = 1; i <= lists.size(); i++) {
+                List<String> list = lists.get(i - 1);
+                for (int j = 0; j < list.size(); j++) {
+                    ps.setString(j + 1, list.get(j));
+                }
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            ps.clearBatch();
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 
     /**

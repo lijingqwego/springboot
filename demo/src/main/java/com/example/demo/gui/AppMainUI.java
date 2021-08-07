@@ -1,5 +1,6 @@
 package com.example.demo.gui;
 
+import com.example.demo.excel.ExcelReader;
 import com.example.demo.mapper.StudentMapper;
 import com.example.demo.pojo.Student;
 import com.example.demo.utils.DbUtils;
@@ -9,21 +10,10 @@ import com.example.demo.utils.MapperUtil;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
 
@@ -32,7 +22,7 @@ public class AppMainUI extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
 
     private JTextField searchField;
-    private JTable tabel;
+    private JTable table;
     private CommonTableModel comInfo;
 
     public static void main(String[] args) {
@@ -89,9 +79,10 @@ public class AppMainUI extends JFrame implements ActionListener {
         southPanel.add(deleteBut);
 
         comInfo = new CommonTableModel();
-        tabel = new JTable(comInfo);
-        tabel.getTableHeader().setReorderingAllowed(false);
-        JScrollPane scrollPanel = new JScrollPane(tabel);
+        table = new JTable(comInfo);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        JScrollPane scrollPanel = new JScrollPane(table);
 
         this.setTitle("学生管理系统");
         this.add(scrollPanel);
@@ -113,15 +104,15 @@ public class AppMainUI extends JFrame implements ActionListener {
             String sql = "select * from t_student where name like ?";
 			comInfo = new CommonTableModel(sql, new Object[] { "%"+name+"%" });
             //comInfo = new CommonTableModel(name);
-            tabel.setModel(comInfo);
+            table.setModel(comInfo);
         } else if (e.getActionCommand().equals(Constans.Action.SELECT_ALL)) {// 查询全部
             comInfo = new CommonTableModel();
-            tabel.setModel(comInfo);
+            table.setModel(comInfo);
         } else if (e.getActionCommand().equals(Constans.Action.EXPORT)) {// 导出数据
             try {
                 FileSystemView fsv = FileSystemView.getFileSystemView();
                 File deskDirFile = fsv.getHomeDirectory();
-                File file = new File(deskDirFile.getAbsolutePath(), "学生列表-" + System.currentTimeMillis() + ".xls");
+                File file = new File(deskDirFile.getAbsolutePath(), "学生列表-" + System.currentTimeMillis() + ".xlsx");
                 FileOutputStream out = new FileOutputStream(file);
                 StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
                 String name = searchField.getText().trim();
@@ -133,9 +124,9 @@ public class AppMainUI extends JFrame implements ActionListener {
                 out.close();
             } catch (Exception e1) {
                 e1.printStackTrace();
-                JOptionPane.showMessageDialog(this, "学生列表.xls 导出失败");
+                JOptionPane.showMessageDialog(this, "学生列表.xlsx 导出失败");
             }
-            JOptionPane.showMessageDialog(this, "学生列表.xls 已成功导出到桌面");
+            JOptionPane.showMessageDialog(this, "学生列表.xlsx 已成功导出到桌面");
         } else if (e.getActionCommand().equals(Constans.Action.IMPORT)) {//导入数据
             try {
                 JFileChooser jfc = new JFileChooser();
@@ -147,11 +138,12 @@ public class AppMainUI extends JFrame implements ActionListener {
                 } else if (file.isFile()) {
                     System.out.println("文件:" + file.getAbsolutePath());
                 }
-                FileInputStream inputStream = new FileInputStream(file);
-                Vector<Student> students = ExcelUtils.readExcel(inputStream, jfc.getSelectedFile().getName());
-                StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
-                mapper.addStudentList(students);
-                MapperUtil.closeUpdSession();
+                ExcelReader excelReader = new ExcelReader();
+                List<List<String>> lists = excelReader.readExcel(file.getCanonicalPath(), 1);
+//                StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
+//                mapper.addStudentList(students);
+//                MapperUtil.closeUpdSession();
+                DbUtils.batchupdateTable("insert into t_student values(?,?,?,?,?,?)", lists);
             } catch (Exception e1) {
                 e1.printStackTrace();
                 JOptionPane.showMessageDialog(this, "导入数据失败");
@@ -159,38 +151,50 @@ public class AppMainUI extends JFrame implements ActionListener {
             }
             JOptionPane.showMessageDialog(this, "已成功导入数据");
             comInfo = new CommonTableModel();
-            tabel.setModel(comInfo);
+            table.setModel(comInfo);
         } else if (e.getActionCommand().equals(Constans.Action.DIALOG_ADD)) {
             new AddDialog(this, "添加学生信息", true);
             comInfo = new CommonTableModel();
-            tabel.setModel(comInfo);
+            table.setModel(comInfo);
         } else if (e.getActionCommand().equals(Constans.Action.DIALOG_UPDATE)) {// 更新
-            int row = tabel.getSelectedRow();
+            int row = table.getSelectedRow();
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "请选中要修改的行");
                 return;
             }
             new UpdateDialog(this, "修改学生信息", true, comInfo, row);
             comInfo = new CommonTableModel();
-            tabel.setModel(comInfo);
+            table.setModel(comInfo);
         } else if (e.getActionCommand().equals(Constans.Action.DELETE)) {// 删除
-            int row = tabel.getSelectedRow();
-            if (row == -1) {
+            int[] selectedRows = table.getSelectedRows();
+            if (selectedRows.length == 0) {
                 JOptionPane.showMessageDialog(this, "请选中要删除的行");
                 return;
             }
-            int result = JOptionPane.showConfirmDialog(this, "确认要删除该学生?", "提示", JOptionPane.WARNING_MESSAGE);
+            List<String> nameList = new ArrayList<>(selectedRows.length);
+            List<List<String>> lists = new ArrayList<>(selectedRows.length);
+            for (int row : selectedRows) {
+                List<String> list = new ArrayList<>(2);
+                Object no = comInfo.getValueAt(row, 0);
+                Object name = comInfo.getValueAt(row, 1);
+                list.add(no.toString());
+                list.add(name.toString());
+                nameList.add(name.toString());
+                lists.add(list);
+            }
+            int result = JOptionPane.showConfirmDialog(this, "确认要删除"+nameList+"学生?", "提示", JOptionPane.WARNING_MESSAGE);
             // 取消
             if (result == 2) {
                 return;
             }
-            Object no = comInfo.getValueAt(row, 0);
 //            StudentMapper mapper = MapperUtil.getMapper(StudentMapper.class);
 //            mapper.deleteStudent(no.toString());
 //            MapperUtil.closeUpdSession();
-            DbUtils.updateTable("delete from t_student where no=?", new Object[] { no });
+            DbUtils.batchupdateTable("delete from t_student where no=? or name=?", lists);
+            lists.clear();
+            nameList.clear();
             comInfo = new CommonTableModel();
-            tabel.setModel(comInfo);
+            table.setModel(comInfo);
         }
     }
 
